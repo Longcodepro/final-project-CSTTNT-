@@ -1,0 +1,18 @@
+
+DATE: 2026-03-30 14:32
+TRAIN CV ACCURACY: 0.8552
+FINAL TEST ACCURACY: 0.8095 
+BEST PARAMS: {'n_estimators': 218, 'max_depth': 6, 'learning_rate': 0.05211999784022236, 'subsample': 0.6420815822395506, 'colsample_bytree': 0.813045955220625, 'gamma': 0.26430098692920817}
+MODEL FILE: final_sonar_model_1432.pkl
+
+DATE: 2026-03-30 15:29
+TRAIN CV ACCURACY: 0.8276
+FINAL TEST ACCURACY: 0.7937 
+BEST PARAMS: {'rate_drop': 0.15800293035950377, 'skip_drop': 0.44085381491616893, 'max_depth': 2, 'learning_rate': 0.018681419402428692, 'n_estimators': 228}
+MODEL FILE: final_sonar_model_1529.pkl
+
+DATE: 2026-03-30 15:52
+TRAIN CV ACCURACY: 0.9310
+FINAL TEST ACCURACY: 0.7937 
+BEST PARAMS: {'max_depth': 1, 'learning_rate': 0.017871027340047706, 'n_estimators': 690, 'colsample_bytree': 0.4976545546313268}
+MODEL FILE: final_sonar_model_1552.pkl
