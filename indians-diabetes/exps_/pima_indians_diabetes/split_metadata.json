@@ -1,0 +1,22 @@
+{
+  "dataset": "pima-indians-diabetes.csv",
+  "created_at": "2026-04-03 13:31:44",
+  "features": [
+    "Pregnancies",
+    "Glucose",
+    "BloodPressure",
+    "SkinThickness",
+    "Insulin",
+    "BMI",
+    "DiabetesPedigreeFunction",
+    "Age"
+  ],
+  "classes": [
+    0,
+    1
+  ],
+  "train_rows": 537,
+  "test_rows": 231,
+  "random_state": 42,
+  "test_size": 0.3
+}
