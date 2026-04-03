@@ -1,7 +1,7 @@
 """
-bin/run_train.py  –  Chạy 02_train.ipynb với thanh tiến trình
+bin/run_test.py  –  Chạy 03_test.ipynb với thanh tiến trình
 Cách dùng:
-    python bin/run_train.py
+    python bin/run_test.py
 """
 import subprocess, sys, time, os, json
 from datetime import datetime
@@ -14,10 +14,10 @@ BOLD   = '\033[1m'
 RESET  = '\033[0m'
 
 NOTEBOOK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                        'prj', '02_train.ipynb')
+                        'prj', '03_test.ipynb')
 if not os.path.exists(NOTEBOOK):
     NOTEBOOK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                            '02_train.ipynb')
+                            '03_test.ipynb')
 
 def count_code_cells(nb_path):
     with open(nb_path, encoding='utf-8') as f:
@@ -37,7 +37,7 @@ def print_header(title):
     print(f'{BOLD}{CYAN}{line}{RESET}')
 
 def main():
-    print_header('🤖  BƯỚC 2 – TRAIN (02_train.ipynb)')
+    print_header('📊  BƯỚC 3 – TEST (03_test.ipynb)')
     print(f'  📄 File    : {os.path.basename(NOTEBOOK)}')
     print(f'  🕐 Bắt đầu : {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
 
@@ -53,17 +53,16 @@ def main():
         '--to', 'notebook',
         '--execute',
         '--inplace',
-        '--ExecutePreprocessor.timeout=1800',
+        '--ExecutePreprocessor.timeout=300',
         NOTEBOOK
     ]
 
-    # Train lâu hơn EDA nhiều vì có GridSearchCV
     stages = [
-        (0,   15,  'Khởi tạo & load dữ liệu...'),
-        (15,  40,  'Chạy Baseline K-Fold (11 models)...'),
-        (40,  85,  'GridSearchCV – Tuning tham số...'),
-        (85,  95,  'Fit toàn bộ & lưu model...'),
-        (95,  100, 'Ghi log & tổng kết...'),
+        (0,  20,  'Khởi tạo & kiểm tra điều kiện...'),
+        (20, 40,  'Load model từ pkl...'),
+        (40, 70,  'Đánh giá trên tập test...'),
+        (70, 90,  'Vẽ Confusion Matrix & ROC...'),
+        (90, 100, 'Ghi log & tổng kết...'),
     ]
 
     start = time.time()
@@ -71,29 +70,28 @@ def main():
 
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-    estimated_total = 600  # ~10 phút cho train + GridSearch
+    estimated_total = 90  # ~1.5 phút cho test
     while proc.poll() is None:
         elapsed  = time.time() - start
         pct_time = min((elapsed / estimated_total) * 100, 98)
-        # Chọn label theo giai đoạn
         label = stages[0][2]
         for s_start, s_end, s_label in stages:
             if s_start <= pct_time < s_end:
                 label = s_label
                 break
         progress_bar(pct_time, 100, label=label)
-        time.sleep(2)
+        time.sleep(1)
 
     elapsed = time.time() - start
     _, stderr = proc.communicate()
 
     if proc.returncode == 0:
         progress_bar(100, 100, label='Hoàn thành!            ')
-        print(f'\n\n  {GREEN}✅ Train hoàn thành trong {elapsed:.1f}s ({elapsed/60:.1f} phút){RESET}')
+        print(f'\n\n  {GREEN}✅ Test hoàn thành trong {elapsed:.1f}s{RESET}')
         print(f'  🕐 Kết thúc: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
     else:
         progress_bar(0, 100, label='LỖI                    ')
-        print(f'\n\n  {RED}❌ Lỗi khi chạy Train:{RESET}')
+        print(f'\n\n  {RED}❌ Lỗi khi chạy Test:{RESET}')
         err_lines = [l for l in stderr.strip().split('\n') if l.strip()]
         for line in err_lines[-20:]:
             print(f'  {RED}{line}{RESET}')
